@@ -1,0 +1,10 @@
+﻿I'm sorry, but errors were detected in your script. Please correct the
+errors listed below, and try again.
+
+
+File "game/script.rpy", line 81: elif clause expects a non-empty block.
+    elif message_choice == "decrypt":
+                                     ^
+
+Ren'Py Version: Ren'Py 8.3.2.24090902
+Sun Nov  3 15:53:53 2024
