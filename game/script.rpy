@@ -9,6 +9,8 @@ define z = Character("Zara Trent", color="#FFC0CB")
 
 # Initialize `message_choice` variable to avoid errors later
 default message_choice = ""
+default jarek_support = ""
+default zara_confronted = ""
 
 # Define images for scenes if not defined elsewhere
 image briefing_room = "briefing_room.png"
@@ -138,6 +140,7 @@ label jarek_conversation:
         j "(sincerely) Always. Just don’t forget to keep your head in the game."
     
     e "(nodding) Thanks, Jarek. I’ll do my best."
+    $ jarek_support = "yes"
     
     jump crew_gathering
 
@@ -156,6 +159,7 @@ label amara_conversation:
         a "(determined) We’ll adapt. We always do. Let’s just remember to keep an open mind."
     
     e "Agreed. Let’s make sure we’re prepared for anything."
+    $ jarek_support = "no"
     
     jump crew_gathering
 
@@ -175,6 +179,7 @@ label zara_conversation:
         z "(dismissively) Focus on the mission, Elara. That’s all that matters."
 
     "Elara feels a sense of unease but decides to let it go for now."
+    $ jarek_support = "no"
 
     jump crew_gathering
 
@@ -400,6 +405,7 @@ label confront_zara:
     e "(intensely) I trusted you, Zara. If you’re not with us, you’re against us."
     
     "Zara’s eyes flash with anger, and the tension in the room escalates into a confrontation."
+    $ zara_confronted = "yes"
     
     # Escalated aggression based on First Contact approach
     if approach_choice == "aggressive":
@@ -428,4 +434,92 @@ label keep_secret:
     e "(resolutely) We will stay vigilant. But for now, let’s focus on the mission. We need each other more than ever."
     
     narrator "The crew returns to the holographic displays, but the atmosphere remains charged with unresolved tension and the weight of secrets."
+    $ zara_confronted = "no"
+    return
+
+label mutiny:
+    # Scene setup
+    scene common_area_day
+    with dissolve
+
+    # Initial dialogue
+    "The atmosphere is thick with tension as the crew of the spaceship gathers in the common area. Holographic displays flicker with data, but the crew's focus is on each other rather than their mission."
+    
+    "Dr. Elara Vaestrom stands at the forefront, flanked by Helion Representative Zara Trent, who appears guarded. The rest of the crew—Captain Jarek Duval, Dr. Amara Li, and Tech Specialist Voss—are visibly agitated."
+
+    if message_choice == "decrypt": # Check if the message was decrypted in "The Last Briefing"
+        "Tension is heightened by the recent revelations. The crew’s aggression is palpable."
+    else:
+        "Tension lingers in the air as unspoken words hang heavily between them."
+
+    e "We need to address what’s happening here. We’re a team, and I refuse to let Helion’s agenda tear us apart."
+
+    z "What’s done is done, Elara. We’re on a mission, and we need to focus on the objectives at hand."
+
+    a "But we can’t ignore the fact that we might be expendable to them. If we don’t act now, we could lose everything."
+
+    v "Consequences? We’re already facing them! We’re risking our lives while Helion sits back and watches!"
+
+    "The crew's emotions boil over, and Jarek looks conflicted, glancing between Elara and the dissenting crew."
+
+    if jarek_support == "yes":
+        j "Elara’s right. We need to stick together. If we don’t, we’re playing directly into Helion’s hands."
+    else:
+        # Jarek remains silent
+        j "..."
+
+    z "I won’t let you jeopardize this mission over your paranoia. You think you can just turn against your own?"
+
+    "The crew begins to turn on each other, voices rising."
+
+    if zara_confronted == "yes":
+        z "This is exactly what Helion feared—a fractured crew. If you want a mutiny, fine. Just know the consequences."
+
+    e "Everyone, please! We’re all in this together. Fighting amongst ourselves won’t solve anything. We need a plan, not a divide."
+
+    # Choices for the player
+    menu:
+        "Use diplomacy to calm tensions":
+            e "Let’s focus on what we can do together. We can’t let Helion win by turning against each other."
+            
+            "The crew hesitates, their anger faltering as they listen to Elara."
+            if jarek_support == "yes":
+                j "Elara’s right. We need to unite for our mission."
+            
+            a "We can find a way to navigate this. We’ve overcome challenges before. Let’s unite our strengths."
+
+            "Gradually, the crew’s tension eases as they remember their shared purpose. Zara, though still wary, seems to relent slightly."
+            z "Fine. But we need to operate with caution. No more reckless decisions."
+            
+            "The crew exchanges glances, a renewed sense of unity forming."
+
+        "Exercise authority to quash the mutiny":
+            e "I am the leader here, and I won’t tolerate this insubordination. We have a mission, and I expect everyone to follow orders!"
+            
+            "The crew stares at her, shock and anger flashing across their faces."
+            if not jarek_support == "yes":
+                j "Elara, this isn’t how you lead. We need to be a team, not a dictatorship!"
+
+            v "So we’re just supposed to bow down while Helion pulls the strings? That’s not teamwork!"
+
+            "Elara’s authority creates rifts among the crew, and the tension escalates."
+            z "You’ve just sealed your fate, Elara. This is exactly what Helion wanted—a divided crew."
+
+            "The crew’s trust in Elara diminishes, sowing seeds of resentment that will lead to future betrayals."
+
+        "Side with dissenting crew":
+            e "You’re right! We can’t let Helion dictate our fate. I stand with you against their agenda!"
+
+            "The crew erupts in a mixture of cheers and disbelief, rallying behind Elara."
+            if jarek_support == "yes":
+                j "Finally! This is what we need! Let’s take control of our mission!"
+
+            z "You’ll regret this betrayal, Elara. You’re playing into Helion’s hands by defying them."
+
+            e "No more secrets. We’ll create our own path."
+
+            "The crew, emboldened by Elara’s words, begins to form a united front against Zara and Helion’s agenda. The tension is thick with the promise of rebellion."
+
+    # End of scene
+
     return
