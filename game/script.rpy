@@ -22,6 +22,14 @@ default betray_helion = ""
 image briefing_room = "briefing_room.png"
 image hangar_bay = "hangar_bay.png"
 image decrypted_message = "decrypted_message.png"
+image spaceship_departure = "spaceship_departure.png"
+image cockpit_view = "cockpit_view.png"
+image nebula_approach = "nebula_approach.png"
+image nebula_rush = "nebula_rush.png"
+image common_area_dim = "common_area_dim.png"
+image common_area_day = "common_area_day.png"
+image alien_structure_day = "alien_structure_day.png"
+image spaceship_control_room = "spaceship_control_room.png"
 
 # Start label to initiate the game
 label start:

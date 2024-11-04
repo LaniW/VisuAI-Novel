@@ -12,7 +12,7 @@
 ##
 ## The _() surrounding the string marks it as eligible for translation.
 
-define config.name = _("VisuAI Novel")
+define config.name = _("Abyss of the Signal")
 
 
 ## Determines if the title given above is shown on the main menu screen. Set
@@ -150,7 +150,7 @@ define config.save_directory = "VisuAINovel-1730250133"
 ##
 ## The icon displayed on the taskbar or dock.
 
-define config.window_icon = "gui/window_icon.png"
+define config.window_icon = "gui/SotA-icon.png"
 
 
 ## Build configuration #########################################################
