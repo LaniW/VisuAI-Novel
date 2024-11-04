@@ -2,9 +2,7 @@
 errors listed below, and try again.
 
 
-File "game/script.rpy", line 17: unexpected EOF while parsing
-    "yes":
-          ^
+File "game/script.rpy", line 102: Indentation mismatch.
 
 Ren'Py Version: Ren'Py 8.3.2.24090902
-Sun Nov  3 19:49:15 2024
+Mon Nov  4 11:02:59 2024
