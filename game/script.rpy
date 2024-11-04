@@ -10,7 +10,11 @@ define z = Character("Zara Trent", color="#FFC0CB")
 # Initialize `message_choice` variable to avoid errors later
 default message_choice = ""
 default jarek_support = ""
+default amara_support = ""
 default zara_confronted = ""
+define approach_choice = ""
+define diplomacy_mutiny = ""
+define kept_secret = ""
 
 # Define images for scenes if not defined elsewhere
 image briefing_room = "briefing_room.png"
@@ -141,6 +145,7 @@ label jarek_conversation:
     
     e "(nodding) Thanks, Jarek. I’ll do my best."
     $ jarek_support = "yes"
+    $ amara_support = "no"
     
     jump crew_gathering
 
@@ -160,6 +165,7 @@ label amara_conversation:
     
     e "Agreed. Let’s make sure we’re prepared for anything."
     $ jarek_support = "no"
+    $ amara_support = "yes"
     
     jump crew_gathering
 
@@ -180,6 +186,7 @@ label zara_conversation:
 
     "Elara feels a sense of unease but decides to let it go for now."
     $ jarek_support = "no"
+    $ amara_support = "no"
 
     jump crew_gathering
 
@@ -413,7 +420,7 @@ label confront_zara:
         jump mutiny  # Placeholder for mutiny scene
     else:
         narrator "Though tense, the crew manages to restrain themselves. Zara’s silence speaks volumes, and Elara knows this conflict is far from over."
-        return  # Ends the scene, to be continued in the next part of the story
+        jump mutiny
 
 # Choice Path 2: Keep the Knowledge Secret
 label keep_secret:
@@ -435,7 +442,8 @@ label keep_secret:
     
     narrator "The crew returns to the holographic displays, but the atmosphere remains charged with unresolved tension and the weight of secrets."
     $ zara_confronted = "no"
-    return
+    $ kept_secret = "yes"
+    jump scene_abys_awakens
 
 label mutiny:
     # Scene setup
@@ -492,6 +500,7 @@ label mutiny:
             z "Fine. But we need to operate with caution. No more reckless decisions."
             
             "The crew exchanges glances, a renewed sense of unity forming."
+            $ diplomacy_mutiny = "yes"
 
         "Exercise authority to quash the mutiny":
             e "I am the leader here, and I won’t tolerate this insubordination. We have a mission, and I expect everyone to follow orders!"
@@ -506,6 +515,7 @@ label mutiny:
             z "You’ve just sealed your fate, Elara. This is exactly what Helion wanted—a divided crew."
 
             "The crew’s trust in Elara diminishes, sowing seeds of resentment that will lead to future betrayals."
+            $ diplomacy_mutiny = "no"
 
         "Side with dissenting crew":
             e "You’re right! We can’t let Helion dictate our fate. I stand with you against their agenda!"
@@ -519,7 +529,101 @@ label mutiny:
             e "No more secrets. We’ll create our own path."
 
             "The crew, emboldened by Elara’s words, begins to form a united front against Zara and Helion’s agenda. The tension is thick with the promise of rebellion."
+            $ diplomacy_mutiny = "no"
 
     # End of scene
+    jump scene_abys_awakens
 
+label scene_abys_awakens:
+    # Scene setup
+    scene alien_structure_day
+    with dissolve
+
+    # Initial atmosphere and character introduction
+    "The crew stands in awe within a vast, organic-like alien structure, illuminated by bioluminescent patterns. The air is thick with an otherworldly energy."
+
+    "Dr. Elara Vaestrom leads her crew—Captain Jarek Duval, Dr. Amara Li, Tech Specialist Voss, and Helion Representative Zara Trent—into the chamber, their expressions a mix of fear and wonder."
+
+    if approach_choice == "cautious": # If cautious approach was taken in "First Contact"
+        "The atmosphere feels less hostile, the alien technology humming gently rather than surging with aggression."
+    else:
+        "A tension hangs in the air, as the alien tech pulses ominously around them."
+
+    a "Look at this! The structure seems to resonate with the energy patterns we detected. It’s almost like a living organism."
+
+    if amara_support == "yes":
+        a "I have a theory! The alien technology might be linked to Earth’s ecosystem. It’s possible that they’ve developed a symbiotic relationship with their environment."
+        
+        "The crew listens intently, the tension in the air easing slightly."
+        
+    e "That’s a fascinating perspective, Amara. If we can understand how they interact with their ecosystem, it might help us figure out how to approach this technology."
+
+    j "Let’s not forget why we’re here. We need to decide how to handle this tech before we get in over our heads."
+
+    v "The energy levels are stable… for now. But we need to act quickly."
+
+    z "We can’t afford to let our guard down. Helion expects results, and we need to make a decision about this technology."
+
+    if diplomacy_mutiny == "yes": # If diplomacy was chosen in "Mutiny"
+        "The crew feels more united as they face the new challenge."
+
+    if kept_secret == "yes": # If the secret was kept in "Secrets Unveiled"
+        # Elara has fewer allies, leading to a more strained dynamic
+        "However, the air is thick with unspoken tensions. The crew's trust in Elara is shaky, and she feels the weight of their skepticism."
+    else:
+        # Normal dynamics if the secret was not kept
+        "There’s a sense of camaraderie, but uncertainty still lingers."
+    
+    # Choices for the player
+    menu:
+        "Attempt to reprogram the technology":
+            e "I say we attempt to reprogram it. If we can tap into its systems, we might be able to control it."
+            
+            "The crew looks at each other, some hesitant but intrigued."
+            a "If we can understand its functions, we might be able to use it to our advantage."
+
+            v "But what if it reacts negatively? We’ve seen how unpredictable it can be."
+
+            e "It’s a risk we have to take. We’ll need to work together."
+
+            "The crew sets to work, interfacing with the alien technology. The atmosphere is charged with tension as they focus on the task at hand."
+
+            # Transition to the next scene
+            jump scene_ultimate_choice
+
+        "Prepare to destroy the alien tech":
+            e "I think we should prepare to destroy it. If we can’t control it, it poses a risk to us and possibly to Earth."
+
+            "The crew exchanges worried glances, the weight of the decision heavy in the air."
+            j "That’s a drastic step, Elara. We might be losing out on something that could help us."
+
+            z "But if it’s dangerous, we can’t afford to take that chance."
+
+            v "Let’s just make sure we have a way out if this goes south."
+
+            "The crew prepares themselves, the tension thickening as they ready their equipment."
+
+            # Transition to the next scene
+            jump scene_ultimate_choice
+
+        "Leave the technology untouched":
+            e "You know what? Let’s leave the technology untouched for now. We need more information before making a decision."
+
+            "The crew looks at each other, some surprised but relieved."
+            a "That might be wise. We don’t fully understand its capabilities yet."
+
+            j "Let’s return to the ship and regroup. We can analyze the data we’ve collected."
+
+            z "Fine. But we need to keep moving. Helion won’t wait forever."
+
+            "The crew begins to back away from the alien technology, a sense of uncertainty hanging in the air as they prepare to leave the chamber."
+
+            # End of scene transition
+            "As they exit the alien structure, there’s an underlying tension, but also a flicker of hope as they consider their next steps and the choices ahead."
+
+    jump scene_ultimate_choice
+
+label scene_ultimate_choice:
+    scene black
+    with dissolve
     return
