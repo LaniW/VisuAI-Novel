@@ -12,9 +12,11 @@ default message_choice = ""
 default jarek_support = ""
 default amara_support = ""
 default zara_confronted = ""
-define approach_choice = ""
-define diplomacy_mutiny = ""
-define kept_secret = ""
+default approach_choice = ""
+default diplomacy_mutiny = ""
+default authority_mutiny = ""
+default kept_secret = ""
+default betray_helion = ""
 
 # Define images for scenes if not defined elsewhere
 image briefing_room = "briefing_room.png"
@@ -164,8 +166,8 @@ label amara_conversation:
         a "(determined) We’ll adapt. We always do. Let’s just remember to keep an open mind."
     
     e "Agreed. Let’s make sure we’re prepared for anything."
-    $ jarek_support = "no"
     $ amara_support = "yes"
+    $ jarek_support = "no"
     
     jump crew_gathering
 
@@ -185,8 +187,6 @@ label zara_conversation:
         z "(dismissively) Focus on the mission, Elara. That’s all that matters."
 
     "Elara feels a sense of unease but decides to let it go for now."
-    $ jarek_support = "no"
-    $ amara_support = "no"
 
     jump crew_gathering
 
@@ -413,6 +413,7 @@ label confront_zara:
     
     "Zara’s eyes flash with anger, and the tension in the room escalates into a confrontation."
     $ zara_confronted = "yes"
+    $ kept_secret = "no"
     
     # Escalated aggression based on First Contact approach
     if approach_choice == "aggressive":
@@ -500,7 +501,9 @@ label mutiny:
             z "Fine. But we need to operate with caution. No more reckless decisions."
             
             "The crew exchanges glances, a renewed sense of unity forming."
+            $ authority_mutiny = "no"
             $ diplomacy_mutiny = "yes"
+            $ betray_helion = "no"
 
         "Exercise authority to quash the mutiny":
             e "I am the leader here, and I won’t tolerate this insubordination. We have a mission, and I expect everyone to follow orders!"
@@ -515,7 +518,9 @@ label mutiny:
             z "You’ve just sealed your fate, Elara. This is exactly what Helion wanted—a divided crew."
 
             "The crew’s trust in Elara diminishes, sowing seeds of resentment that will lead to future betrayals."
+            $ authority_mutiny = "yes"
             $ diplomacy_mutiny = "no"
+            $ betray_helion = "no"
 
         "Side with dissenting crew":
             e "You’re right! We can’t let Helion dictate our fate. I stand with you against their agenda!"
@@ -529,7 +534,9 @@ label mutiny:
             e "No more secrets. We’ll create our own path."
 
             "The crew, emboldened by Elara’s words, begins to form a united front against Zara and Helion’s agenda. The tension is thick with the promise of rebellion."
+            $ authority_mutiny = "no"
             $ diplomacy_mutiny = "no"
+            $ betray_helion = "yes"
 
     # End of scene
     jump scene_abys_awakens
@@ -624,6 +631,131 @@ label scene_abys_awakens:
     jump scene_ultimate_choice
 
 label scene_ultimate_choice:
-    scene black
+    # Setting up the environment and atmosphere
+    scene spaceship_control_room
     with dissolve
-    return
+
+    "The control room is dimly lit, the tension palpable as Elara and her crew gather around the holographic display of the alien technology. The hum of the technology pulses, reflecting the weight of their decision."
+
+    e "We’ve come so far... but we’re out of time. This is it. We decide now or risk everything."
+
+    j "If we take control, we could achieve something monumental, but... what if we lose ourselves in the process?"
+
+    a "We’ve seen what it can do. This tech could wipe us out if we’re not careful."
+
+    z "Helion expects results. We can't leave here with nothing."
+
+    "Elara glances at her crew, gauging their reactions. Past choices weigh heavily here; each crewmember's loyalty or skepticism is written on their face."
+
+    if authority_mutiny == "yes":
+        "Elara feels a distance from some of the crew members, especially those who resented her taking authority earlier. The unspoken tension is thick, and Elara realizes that trust is fragile here."
+    
+    if diplomacy_mutiny  == "yes":
+        "The crew feels more united after Elara's decision to balance authority and diplomacy, though tensions remain high as they face the alien technology."
+
+    if kept_secret == "yes":
+        "The secret Elara kept earlier has weakened some of her allies' trust, and she can sense lingering skepticism from those who felt betrayed."
+
+    # Player's final choice
+    menu:
+        "Sacrifice herself to shut down the alien technology":
+            e "I can’t ask any of you to risk yourselves further. I'll shut it down myself."
+
+            j "Elara, don’t! We need you, and we need each other."
+
+            a "No! There has to be another way."
+
+            "Elara places her hands on the control interface, preparing to shut down the technology. Alarms blare, and the system reacts violently, discharging energy across the room."
+
+            v "Please, Elara, be careful!"
+
+            e "If this technology threatens everything, I won’t let it take any of you. This is on me."
+
+            "She feels the energy surging through her, visions of alien worlds and the universe flashing before her eyes. Her final act resonates deeply with the crew, each one watching in awe and sorrow as the room fills with blinding light."
+
+            centered "Ending 1: Sacrifice and Freedom"
+
+            "The crew returns to Earth, forever changed by Elara's bravery, determined to honor her memory by pursuing a future of peace and wisdom."
+            return
+
+        "Gain control of the technology, risking human freedom":
+            e "We can't destroy something with so much potential. I’ll take control, even if it’s a risk."
+
+            "The crew exchanges uneasy glances. Some support her choice, while others appear deeply concerned about the consequences."
+
+            if diplomacy_mutiny  == "yes":
+                a "If we do this carefully, it could change everything for humanity. I’m with you, Elara."
+            else:
+                a "Elara, I know you believe in this, but what if we end up being controlled by it?"
+
+            z "A wise decision. Helion would approve."
+
+            "Elara connects with the alien system, a rush of power flooding through her. The technology starts to respond, stabilizing and syncing with her commands."
+
+            if kept_secret == "yes":
+                "Suddenly, an error flashes on the control panel, and Elara realizes the risk has grown; a security system overloads, endangering the entire structure."
+            
+            "Alarms sound as the system begins to destabilize, sending waves of energy into the room."
+
+            v "Elara! It’s too powerful. We’re triggering something!"
+
+            e "We have to keep going. It’s too late to stop now!"
+
+            "With a final surge, Elara locks in the controls, fully activating the alien system. The technology's defenses surge, sending out a blinding pulse that engulfs the entire chamber in chaos."
+
+            centered "Ending 2: Power and Control"
+
+            "The crew barely escapes with their lives, carrying with them the immense, perilous knowledge that they attempted to wield a power far beyond human understanding."
+            return
+
+        "Destroy the alien tech and abandon the project":
+            e "If we can’t control it safely, we need to destroy it. We can’t take the chance."
+
+            "Her tone is final, and the crew’s expressions shift to concern and reluctant agreement."
+
+            j "If that’s what you think is best, Elara. Let's end this here."
+
+            "Voss initiates the self-destruct sequence, his hands shaking as he enters the final command. The alien structure begins to tremble, and alarms blare around them as the countdown starts."
+
+            if betray_helion:
+                z "You’ll regret this decision. Helion doesn’t forgive so easily."
+
+            "As the countdown reaches its final moments, the alien system’s defenses activate, hurling energy beams across the chamber."
+
+            a "Everyone, get back to the ship, now!"
+
+            "The crew races towards the exit, dodging energy blasts as the alien structure collapses. They make it back to the ship just as a massive explosion erupts behind them."
+
+            centered "Ending 3: The Void’s Warning"
+
+            "As they return to Earth, the crew reflects on the unknown dangers they encountered, forever reminded of the fragility of human understanding in the face of cosmic power."
+            return
+
+        "Attempt to harness the tech with the crew":
+            e "We’ll work together to harness its power. We’ve come this far as a team."
+
+            "Some crew members step forward, encouraged, while others remain cautious, unsure of the path Elara has chosen."
+
+            if diplomacy_mutiny  == "yes":
+                j "If we work together, maybe we can understand it without triggering its defenses. I'm with you, Elara."
+            else:
+                j "Are you sure this is wise? We’re dealing with something we don’t fully understand."
+
+            a "There’s a real risk, but maybe we can do it."
+
+            "They gather around the control interface, each member working on a different aspect of the technology. As they proceed, the alien system begins to power up, glowing with an intense energy."
+
+            "The system's defenses activate suddenly, and a blinding energy wave fills the room."
+
+            v "Everyone, get down!"
+
+            "Energy surges around them, and in the chaos, the crew struggles to keep the technology stable. But the intensity becomes overwhelming."
+
+            e "Hold on! We’re almost there!"
+
+            "As the energy wave reaches its peak, the crew is engulfed in a blinding flash, and they feel themselves slipping into a strange, unfamiliar realm, lost in the technology’s vast, incomprehensible depths."
+
+            centered "Ending 4: Vanished in the Abyss"
+
+            "The crew’s ambition to harness the unknown led them into a place beyond human understanding, their fates left uncertain as they disappear into the alien void."
+            return
